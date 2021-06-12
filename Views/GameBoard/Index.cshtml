@@ -91,16 +91,13 @@
             }
             if (gameBoard.status == 2) {
                 jQuery('#stopwatch').stopwatch().stopwatch('stop');
-
-                /**
-                jQuery("table.table-custom").remove();
-                jQuery("body").html("<h1>You're a winner!</h1><br><h2>What a nice shot!</h2>");
-                */
+                jQuery("table.table-custom").html("<img src='/winner.gif' style='width:320px;height:200px;'>");
+                
                 return;
             }
             if (gameBoard.status == 1) {
                 jQuery("table.table-custom").remove();
-                jQuery("body").html("<h1 style='color:magenta;margin:30%;'>You're a such a looser!</h1>");
+                jQuery("body").html("<h1 style='color:magenta;margin:15%;'>You're a such a looser!</h1>");
                 return;
             }
             jQuery("h4.flagCount").text(gameBoard.flagCount);
