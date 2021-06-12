@@ -1,0 +1,117 @@
+﻿@{
+    ViewData["Title"] = "Gaaaaaaaame!";
+}
+@model GameBoard
+
+<h4>@Model.MineCount</h4>
+<h4 class="flagCount">@Model.FlagCount</h4>
+<h1>Minesweeper</h1>
+<div id="stopwatch" class="stopwatch">00:00:00</div>
+<table class="table-custom">
+    @{
+
+        var id = 1;
+        for (int i = 1; i <= @Model.Height; i++)
+        {
+            <tr class="tr-sizing">
+                @{
+                    for (int j = 1; j <= @Model.Width; j++)
+                    {
+                        var field = @Model.Fields.First(f => f.Id == id);
+
+                        <td class="td-sizing">
+                            <div class="ms-field td-div-sizing" id="@field.Id"></div>
+                        </td>
+                        id++;
+                    }
+                }
+            </tr>
+
+        }
+
+    }
+</table>
+
+
+
+@section Scripts{
+    <script>
+        var firstClickDone = false;
+        
+        jQuery(".ms-field").mousedown(function (event) {
+            if (!firstClickDone) {
+                jQuery('#stopwatch').stopwatch().stopwatch('start');
+                firstClickDone = true;
+            }
+
+            switch (event.which) {
+
+                case 1:
+                    callControllerActionByMouseClick(event.target.id, "leftMouseClick")
+                    console.log("left mouse button clicked");
+                    break;
+                case 3:
+                    callControllerActionByMouseClick(event.target.id, "rightMouseClick")
+                    console.log("right mouse button clicked");
+                    break;
+
+                default:
+                    console.log("not left and not right clicked");
+            }
+        });
+        function callControllerActionByMouseClick(fieldId, controllerAction) {
+            jQuery.ajax({
+                url: '/GameBoard/' + controllerAction,
+                data: { fieldId: fieldId }
+            }).done(function (gameBoard) {
+                changeDOMObjectAfterClick(gameBoard);
+            })
+        }
+        function changeDOMObjectAfterClick(gameBoard) {
+
+            
+            for (i = 0; i < gameBoard.fields.length; i++) {
+                var idSelector = jQuery("#" + gameBoard.fields[i].id);
+
+                if (!gameBoard.fields[i].isFlagged && idSelector.text() == "Flagge") {
+                    idSelector.text("");
+                }
+                if (gameBoard.fields[i].isFlagged) {
+                    idSelector.text("Flagge");
+                    continue;
+                }
+
+                if (gameBoard.fields[i].isRevealed) {
+
+                    idSelector.html(gameBoard.fields[i].adjacentMines);
+                    continue;
+                }
+
+
+            }
+            if (gameBoard.status == 2) {
+                jQuery('#stopwatch').stopwatch().stopwatch('stop');
+
+                /**
+                jQuery("table.table-custom").remove();
+                jQuery("body").html("<h1>You're a winner!</h1><br><h2>What a nice shot!</h2>");
+                */
+                return;
+            }
+            if (gameBoard.status == 1) {
+                jQuery("table.table-custom").remove();
+                jQuery("body").html("<h1 style='color:magenta;margin:30%;'>You're a such a looser!</h1>");
+                return;
+            }
+            jQuery("h4.flagCount").text(gameBoard.flagCount);
+            return;
+
+
+        }
+
+
+        document.oncontextmenu = function () {
+            return false;
+        }
+    </script>
+}

@@ -1,0 +1,36 @@
+﻿@{
+    ViewData["Title"] = "Create game";
+}
+@model GameBoard
+<h1>Lets create a nice game!</h1>
+
+<form asp-action="Create" method="post" class="form-horizontal" role="form">
+    <div class="form-group">
+        <label asp-for="Width" class="col-md-2 control-label"></label>
+        <div class="col-md-5">
+            <input asp-for="Width" class="form-control" />
+            <span asp-validation-for="Width" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label asp-for="Height" class="col-md-2 control-label"></label>
+        <div class="col-md-5">
+            <input asp-for="Height" class="form-control" />
+            <span asp-validation-for="Height" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label asp-for="MineCount" class="col-md-2 control-label"></label>
+        <div class="col-md-5">
+            <input asp-for="MineCount" class="form-control" />
+            <span asp-validation-for="MineCount" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-5">
+            <input type="submit" class="btn btn-primary" value="Start game!" />
+        </div>
+    </div>
+
+</form>
